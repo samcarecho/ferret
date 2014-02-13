@@ -1,0 +1,7 @@
+<!-- class no-drag padding: {{friendsView.containerVerticalPadding}}px 0px width: {{friendsView.containerWidth}}px -->
+<div id=friends-container ng-model=friends ng-show="loginStatus || loginStatus.status == 'connected'" style="padding: 0; width: {{friendsView.containerWidth}}px">
+  <!-- class no-drag {{paginationAnin}} -->
+  <friend-container id="fc-{{ friend.id }}" fb-id={{friend.id}} class="{{friendWrapper}} {{paginationAnin}}" style="position: relative; z-index: 10" ng-repeat="friend in friends.data"></friend-container></div>
+<div id=friends-loading ng-show=scroll.loading>
+  <img src=/img/loading64.gif alt=loading...>
+</div>

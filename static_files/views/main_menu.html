@@ -1,0 +1,25 @@
+<div class=navbar-inner>
+    <div class=container>
+      <button type=button class="btn btn-navbar" ng-click="isNavCollapsed = !isNavCollapsed">
+        <span class=icon-bar></span>
+        <span class=icon-bar></span>
+        <span class=icon-bar></span>
+      </button>
+      <a class=brand href=/ id=wapp_name>TrustFerret</a>
+      <div class=nav-collapse collapse=isNavCollapsed ng-click="isNavCollapsed = true">
+        <ul class=nav>
+          <li ng-class="{ 'active' : activeTab=='start' }"><a href=/>{{ 'START' | translate }}</a></li>
+          <li ng-class="{ 'active' : activeTab=='privacy-policy' }"><a href=/privacy-policy>{{ 'PRIVACY_POLICY' | translate }}</a></li>
+          <li ng-class="{ 'active' : activeTab=='terms-of-service' }"><a href=/terms-of-service>{{ 'TERMS_OF_SERVICE' | translate }}</a></li>
+          <li>
+            <button ng-click="changeLanguage('en_US')" translate=BUTTON_TEXT_EN_US></button>
+            <button ng-click="changeLanguage('pt_BR')" translate=BUTTON_TEXT_PT_BR></button>
+          </li>
+          <li>
+            <button class="btn btn-primary" ng-click=login() ng-disabled="loginStatus.status == 'connected'">Connect with Facebook</button>
+            <button class="btn btn-danger" ng-click=logout() ng-disabled="!loginStatus || loginStatus.status != 'connected'">Logout</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>

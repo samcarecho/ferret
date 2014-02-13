@@ -1,0 +1,43 @@
+application: trustferretdev
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+#default_expiration: "30d"
+
+
+handlers:
+# Static assets
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+- url: /scripts
+  static_dir: static_files/scripts
+- url: /styles
+  static_dir: static_files/styles
+- url: /img
+  static_dir: static_files/img
+- url: /lib
+  static_dir: static_files/lib
+- url: /views
+  static_dir: static_files/views
+- url: /
+  static_files: static_files/index.html
+  upload: static_files/index\.html
+  secure: always
+
+# Endpoints handler
+- url: /_ah/spi/.*
+  script: main.APP
+
+
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest
+- name: pycrypto
+  version: latest
+- name: endpoints
+  version: 1.0

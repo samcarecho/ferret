@@ -1,0 +1,14 @@
+<div id=welcome-screen-wrapper class="{{ welcome }}">
+  <div id=welcome-screen-top class="row tf-row">
+    <div id=ws-logo-wrapper class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+      <img class=img-responsive src=img/logo_TrustFerret_330x330.png id=ws-logo-img>
+    </div>
+    <div id=ws-button-wrapper class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+      <div id=ws-logo-text><span>TrustFerret</span></div>
+      <button class="btn btn-primary btn-large btn-block" ng-click=login()>{{ 'FB_CONNECT' | translate }}</button>
+    </div>
+  </div>
+  <div id=welcome-screen-bottom class="row tf-row">
+    <div id=ws-desc-text class="col-xs-12 col-sm-12 col-md-12 col-lg-12">{{ 'WELCOME_DESCRIPTION' | translate }}</div>
+  </div>
+</div>
