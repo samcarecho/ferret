@@ -58,10 +58,15 @@ class Users(ndb.Expando):
         user_name = user_data['name']
         user_id = int(user_data['id'])
 
-        ent = cls.get_by_id(user_id)
+        key = ndb.Key(Users, user_id)
+        ent = key.get()
         if ent is None:
             ent = cls(id=user_id, userName=user_name, userData=user_data)
+        else:
+            ent.userName = user_name
+            ent.userData = user_data
         ent.put()
+
         return ent
 
         #entity.get_or_insert(user_data['id'])
@@ -167,12 +172,11 @@ class TokensFB(ndb.Model):
     Parent = Users
     Entity key = auto
     """
-    creationDate = ndb.DateTimeProperty(auto_now_add=True)
+    updateDate = ndb.DateTimeProperty(auto_now=True)
     userID = ndb.IntegerProperty(required=True)
     shortToken = ndb.StringProperty(required=True)
     shortTokenExpiration = ndb.IntegerProperty(required=True)
     longToken = ndb.StringProperty()
-
 
     @property
     def timestamp(self):
@@ -201,10 +205,17 @@ class TokensFB(ndb.Model):
         token_expiration = auth_data['expiresIn']
 
         parent_instance = ndb.Key(Users, user_id)
-        ent = cls(parent=parent_instance,
-                  userID=int(user_id),
-                  shortToken=short_token,
-                  shortTokenExpiration=token_expiration)
+        token_user_key = TokensFB.query(TokensFB.userID == user_id, ancestor=parent_instance)
+        ent = token_user_key.get()
+        if ent is None:
+            parent_instance = ndb.Key(Users,user_id)
+            ent = cls(parent=parent_instance,
+                      userID=int(user_id),
+                      shortToken=short_token,
+                      shortTokenExpiration=token_expiration)
+        else:
+            ent.shortToken = short_token
+            ent.shortTokenExpiration = token_expiration
         ent.put()
         return ent
 
