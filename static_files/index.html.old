@@ -1,15 +1,33 @@
 <!DOCTYPE html>
-<html ng-app=dwnet>
+<html>
 <head>
   <title>TrustFerret</title>
   <meta name=viewport content="width=device-width, initial-scale=1.0">
   <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+
   <link href=//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css rel=stylesheet>
   <link href=styles/main.css rel=stylesheet media=screen>
+
+  <script>
+    function tfCallback(){
+      var apisToLoad = 1; // must match number of calls to gapi.client.load()
+
+      var gCallback = function() {
+        if (--apisToLoad == 0) {
+          //Manual bootstraping of the application
+          var $injector = angular.bootstrap(document, ['dwnet']);
+          //console.log('Angular bootstrap complete ' + gapi);
+        };
+      };
+      gapi.client.load('trustferret', 'v1', gCallback, 'https://trustferretdev.appspot.com/_ah/api');
+    }
+  </script>
+  <script src="https://apis.google.com/js/client.js?onload=tfCallback"></script>
+
 <body>
 <div id=main-container class="row tf-row">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hundred-h">
-    <div class=row>
+    <div class=row ng-class="{ 'hidden' : loginStatus.status != 'connected' }">
       <div id=app-header class="col-xs-12 col-sm-12 visible-xs visible-sm">
         <nav class="navbar navbar-inverse" role=navigation>
           <div class=navbar-header>
@@ -22,95 +40,100 @@
       </div>
     </div>
     <div class="row hundred-h">
-      <div id=main-stage class="app-stage col-xs-12 col-sm-12 col-md-10 col-lg-10">
-        <div id=stage-view ng-view=""></div>
+      <div id=main-stage class="app-stage col-xs-12 col-sm-12" ng-class="{'col-md-10': wColumn, 'col-lg-10': wColumn}">
+        <div id=stage-view ng-view="" infinite-scroll=""></div>
       </div>
-      <div id=lateral-menu-container class="col-md-2 col-lg-2 hidden-xs hidden-sm" ng-class="{ 'hidden' : loginStatus.status != 'connected' }">
-        <div id=vertical-paging class="col-lg-3 visible-lg" ng-if="activeTab==='start'">
-          <div id=vertical-friends-nav class="btn-group-vertical vertical-paging-buttons-group">
-            <button type=button class="btn btn-paging vertical-paging-button" direction=next paging-friends="">
-              <span class="glyphicon glyphicon-chevron-left stage-nav"></span>
+      <div id=lateral-menu-container-mock class="col-md-2 col-lg-2 hidden-xs hidden-sm menu-placeholder" ng-class="{ 'hidden' : loginStatus.status != 'connected' }">
+        &nbsp;
+      </div>
+    </div>
+  </div>
+  <div id=lateral-menu-container class="col-md-2 col-lg-2 hidden-xs hidden-sm pull-right hundred-h menu-layer" ng-class="{ 'hidden' : loginStatus.status != 'connected' }">
+    <!--<div id="vertical-paging" class="col-lg-3 visible-lg" ng-if="activeTab==='start'">
+      <div id="vertical-friends-nav" class="btn-group-vertical vertical-paging-buttons-group">
+        <button type="button" class="btn btn-paging vertical-paging-button" direction="previous" paging-friends>
+          <span class="glyphicon glyphicon-chevron-up stage-nav"></span>
+        </button>
+        <button type="button" class="btn btn-paging vertical-paging-button" direction="next" paging-friends>
+          <span class="glyphicon glyphicon-chevron-down stage-nav"></span>
+        </button>
+      </div>
+    </div>-->
+    <div id=lateral-menu ng-controller=MenuControl class="col-md-12 col-lg-12 visible-md visible-lg" role=navigation>
+      <ul class="nav nav-pills nav-stacked">
+        <!--<li id="horizontal-paging-nav" ng-if="activeTab==='start'" class="col-md-12 visible-md">
+          <div id="friendsNav" class="btn-group paging-buttons-group horizontal-paging-buttons-group">
+            <button type="button" class="btn btn-paging horizontal-paging-button" direction="previous" paging-friends>
+              <span class="glyphicon glyphicon-chevron-up stage-nav"></span>
             </button>
-            <button type=button class="btn btn-paging vertical-paging-button" direction=previous paging-friends="">
-              <span class="glyphicon glyphicon-chevron-right stage-nav"></span>
+            <button type="button" class="btn btn-paging horizontal-paging-button" direction="next" paging-friends>
+              <span class="glyphicon glyphicon-chevron-down stage-nav"></span>
             </button>
           </div>
-        </div>
-        <div id=lateral-menu ng-controller=MenuControl class="col-md-12 col-lg-9 visible-md visible-lg" role=navigation>
-            <ul class="nav nav-pills nav-stacked">
-              <li id=horizontal-paging-nav ng-if="activeTab==='start'" class="col-md-12 visible-md">
-                <div id=friendsNav class="btn-group paging-buttons-group">
-                  <button type=button class="btn btn-paging paging-button" direction=next paging-friends="">
-                    <span class="glyphicon glyphicon-chevron-left stage-nav"></span>
-                  </button>
-                  <button type=button class="btn btn-paging paging-button" direction=previous paging-friends="">
-                    <span class="glyphicon glyphicon-chevron-right stage-nav"></span>
-                  </button>
-                </div>
-              </li>
-              <li>
-                <div id=user-stats>
-                  <span id=user-name>{{apiMe.first_name}}</span>
-                  <span id=user-re>70</span>
-                  <span id=user-votes>35 {{ 'VOTES' | translate }}</span>
-                  <div id=user-chart-container>
-                    <canvas id=user-chart height=80 user-chart=""></canvas>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div id=app-info>
-                  <div id=wapp_logo class=dropdown-toggle>
-                    <img id=wapp_logo_img src=/img/logo_TrustFerret_220x220_gray.png onmouseover="this.src = '/img/logo_TrustFerret_220x220.png'" onmouseout="this.src = '/img/logo_TrustFerret_220x220_gray.png'">
-                  </div>
-                  <div id=app-nav class=dropdown-menu>
-                    <div class="btn-group btn-group-sm lang-buttons-group">
-                      <button type=button class="btn btn-default lang-button" ng-class="{ 'active' : activeLang==='en_US' }" ng-click="changeLanguage('en_US')">
-                        <a class=lang-button ng-click="changeLanguage('en_US')">
-                          <span class=lang-button>EN</span>
-                          <!--<img class="language_flag" src="/img/us.png" alt="{{ 'BUTTON_TEXT_EN_US' | translate }}" title="{{ 'BUTTON_TEXT_EN_US' | translate }}" />-->
-                        </a>
-                      </button>
-                      <button type=button class="btn btn-default lang-button" ng-class="{ 'active' : activeLang==='pt_BR' }" ng-click="changeLanguage('pt_BR')">
-                        <a class=lang-button ng-click="changeLanguage('pt_BR')">
-                          <span class=lang-button>PT</span>
-                          <!--<img class="language_flag" src="/img/br.png" alt="{{ 'BUTTON_TEXT_PT_BR' | translate }}" title="{{ 'BUTTON_TEXT_PT_BR' | translate }}" />-->
-                        </a>
-                      </button>
-                      <button type=button class="btn btn-default lang-button" ng-class="{ 'active' : activeLang==='de_AT' }" ng-click="changeLanguage('de_AT')">
-                        <a class=lang-button ng-click="changeLanguage('de_AT')">
-                          <span class=lang-button>DE</span>
-                          <!--<img class="language_flag" src="/img/de.png" alt="{{ 'BUTTON_TEXT_DE_AT' | translate }}" title="{{ 'BUTTON_TEXT_DE_AT' | translate }}"/>-->
-                        </a>
-                      </button>
-                      <button type=button class="btn btn-default lang-button" ng-class="{ 'active' : activeLang==='es' }" ng-click="changeLanguage('es')">
-                        <a class=lang-button ng-click="changeLanguage('es')">
-                          <span class=lang-button>ES</span>
-                          <!--<img class="language_flag" src="/img/es.png" alt="{{ 'BUTTON_TEXT_ES' | translate }}" title="{{ 'BUTTON_TEXT_ES' | translate }}" />-->
-                        </a>
-                      </button>
-                    </div>
-                    <div id=app-links>
-                      <button type=button class="btn btn-default btn-xs btn-block" ng-class="{ 'active' : activeTab=='start' }">
-                        <a href=/>{{ 'START' | translate }}</a>
-                      </button>
-                      <button type=button class="btn btn-default btn-xs btn-block" ng-class="{ 'active' : activeTab=='about' }">
-                        <a href=/about>{{ 'ABOUT' | translate }}</a>
-                      </button>
-                      <button type=button class="btn btn-default btn-xs btn-block" ng-class="{ 'active' : activeTab=='privacy-policy' }">
-                        <a href=/privacy-policy>{{ 'PRIVACY_POLICY' | translate }}</a>
-                      </button>
-                      <button type=button class="btn btn-default btn-xs btn-block" ng-class="{ 'active' : activeTab=='terms-of-service' }">
-                        <a href=/terms-of-service>{{ 'TERMS_OF_SERVICE' | translate }}</a>
-                      </button>
-                    </div>
-                  </div>
-                  <span id=wapp_name>TrustFerret</span>
-                </div>
-              </li>
-            </ul>
-        </div>
-      </div>
+        </li>-->
+        <li>
+          <div id=user-stats>
+            <div class=ng-hide ng-class="{ 'ng-hide' : hide}">
+              <span id=user-name>{{apiMe.first_name}}</span>
+              <span id=user-re>70</span>
+              <span id=user-votes>35 {{ 'VOTES' | translate }}</span>
+            </div>
+            <div id=user-chart-container>
+              <canvas id=user-chart height=80 user-chart=""></canvas>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div id=app-info>
+            <div id=wapp_logo class=dropdown-toggle>
+              <img id=wapp_logo_img src=/img/logo_TrustFerret_220x220_gray.png onmouseover="this.src = '/img/logo_TrustFerret_220x220.png'" onmouseout="this.src = '/img/logo_TrustFerret_220x220_gray.png'">
+            </div>
+            <div id=app-nav class=dropdown-menu>
+              <div class="btn-group btn-group-sm lang-buttons-group">
+                <button type=button class="btn btn-default lang-button" ng-class="{ 'active' : activeLang==='en_US' }" ng-click="changeLanguage('en_US')">
+                  <a class=lang-button ng-click="changeLanguage('en_US')">
+                    <span class=lang-button>EN</span>
+                    <!--<img class="language_flag" src="/img/us.png" alt="{{ 'BUTTON_TEXT_EN_US' | translate }}" title="{{ 'BUTTON_TEXT_EN_US' | translate }}" />-->
+                  </a>
+                </button>
+                <button type=button class="btn btn-default lang-button" ng-class="{ 'active' : activeLang==='pt_BR' }" ng-click="changeLanguage('pt_BR')">
+                  <a class=lang-button ng-click="changeLanguage('pt_BR')">
+                    <span class=lang-button>PT</span>
+                    <!--<img class="language_flag" src="/img/br.png" alt="{{ 'BUTTON_TEXT_PT_BR' | translate }}" title="{{ 'BUTTON_TEXT_PT_BR' | translate }}" />-->
+                  </a>
+                </button>
+                <button type=button class="btn btn-default lang-button" ng-class="{ 'active' : activeLang==='de_AT' }" ng-click="changeLanguage('de_AT')">
+                  <a class=lang-button ng-click="changeLanguage('de_AT')">
+                    <span class=lang-button>DE</span>
+                    <!--<img class="language_flag" src="/img/de.png" alt="{{ 'BUTTON_TEXT_DE_AT' | translate }}" title="{{ 'BUTTON_TEXT_DE_AT' | translate }}"/>-->
+                  </a>
+                </button>
+                <button type=button class="btn btn-default lang-button" ng-class="{ 'active' : activeLang==='es' }" ng-click="changeLanguage('es')">
+                  <a class=lang-button ng-click="changeLanguage('es')">
+                    <span class=lang-button>ES</span>
+                    <!--<img class="language_flag" src="/img/es.png" alt="{{ 'BUTTON_TEXT_ES' | translate }}" title="{{ 'BUTTON_TEXT_ES' | translate }}" />-->
+                  </a>
+                </button>
+              </div>
+              <div id=app-links>
+                <button type=button class="btn btn-default btn-xs btn-block" ng-class="{ 'active' : activeTab=='start' }">
+                  <a href=/>{{ 'START' | translate }}</a>
+                </button>
+                <button type=button class="btn btn-default btn-xs btn-block" ng-class="{ 'active' : activeTab=='about' }">
+                  <a href=/#/about>{{ 'ABOUT' | translate }}</a>
+                </button>
+                <button type=button class="btn btn-default btn-xs btn-block" ng-class="{ 'active' : activeTab=='privacy-policy' }">
+                  <a href=/#/privacy-policy>{{ 'PRIVACY_POLICY' | translate }}</a>
+                </button>
+                <button type=button class="btn btn-default btn-xs btn-block" ng-class="{ 'active' : activeTab=='terms-of-service' }">
+                  <a href=/#/terms-of-service>{{ 'TERMS_OF_SERVICE' | translate }}</a>
+                </button>
+              </div>
+            </div>
+            <span id=wapp_name>TrustFerret</span>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
@@ -120,3 +143,4 @@
 <script src=scripts/tp.js></script>
 <script src=scripts/tfp.js></script>
 </html>
+
