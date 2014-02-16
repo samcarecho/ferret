@@ -45,7 +45,7 @@
     </div>
     <div class="row hundred-h">
       <div id=main-stage class="app-stage col-xs-12 col-sm-12" ng-class="{'col-md-10': wColumn, 'col-lg-10': wColumn}">
-        <div id=stage-view ng-view="" infinite-scroll=""></div>
+        <div ng-cloak id=stage-view ng-view="" infinite-scroll=""></div>
       </div>
       <div id=lateral-menu-container-mock class="col-md-2 col-lg-2 hidden-xs hidden-sm menu-placeholder" ng-class="{ 'hidden' : loginStatus.status != 'connected' }">
         &nbsp;
@@ -53,7 +53,7 @@
     </div>
   </div>
   <div id=lateral-menu-container class="col-md-2 col-lg-2 hidden-xs hidden-sm pull-right hundred-h menu-layer" ng-class="{ 'hidden' : loginStatus.status != 'connected' }">
-    <div id=lateral-menu ng-controller=MenuControl class="col-md-12 col-lg-12 visible-md visible-lg" role=navigation>
+    <div id=lateral-menu ng-cloak ng-controller=MenuControl class="col-md-12 col-lg-12 visible-md visible-lg" role=navigation>
       <ul class="nav nav-pills nav-stacked">
         <li>
           <div id=user-stats>
