@@ -28,7 +28,7 @@ WEB_CLIENT_ID = 'AIzaSyDIaoLnW0qEdm_jVquJBPBexB-i7qY5Daw'
 
 ID_RESOURCE = endpoints.ResourceContainer(
     message_types.VoidMessage,
-    id=messages.IntegerField(1, variant=messages.Variant.UINT64),
+    id=messages.StringField(1, variant=messages.Variant.STRING),
     limit=messages.IntegerField(2, variant=messages.Variant.INT32, default=10))
 
 USERDATA_RESOURCE = endpoints.ResourceContainer(
@@ -37,8 +37,8 @@ USERDATA_RESOURCE = endpoints.ResourceContainer(
 
 VOTE_RESOURCE = endpoints.ResourceContainer(
     message_types.VoidMessage,
-    userID = messages.IntegerField(1, variant=messages.Variant.UINT64, required=True),
-    friendID = messages.IntegerField(2, variant=messages.Variant.UINT64, required=True),
+    userID = messages.StringField(1, variant=messages.Variant.STRING, required=True),
+    friendID = messages.StringField(2, variant=messages.Variant.STRING, required=True),
     vote = messages.StringField(3, variant=messages.Variant.STRING, required=True))
 
 TOKEN_RESOURCE = endpoints.ResourceContainer(
