@@ -5,6 +5,7 @@ import endpoints
 from protorpc import remote
 from protorpc import messages
 from protorpc import message_types
+import logging
 
 from tf_api_messages import UserResponseMessage
 from tf_api_messages import UserRequestMessage
@@ -108,6 +109,7 @@ class TrustFerretApi(remote.Service):
         Returns:
             An instance of UserVotesResponseMessage containing a success message.
         """
+        logging.info(request.friendID)
         entity = Votes.put_from_message(request)
         #print entity
         return entity.to_message()
