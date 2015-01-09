@@ -46,9 +46,9 @@ TOKEN_RESOURCE = endpoints.ResourceContainer(
     #authResponse = messages.StringField(1, variant=messages.Variant.STRING, required=True))
 
 
-@endpoints.api(name='trustferret', version='v1')
+@endpoints.api(name='trustferret', version='v2')
 class TrustFerretApi(remote.Service):
-    """TrustFerret API v1."""
+    """TrustFerret API v2."""
 
     @endpoints.method(ID_RESOURCE, UserResponseMessage,
                       path='user/{id}', http_method='GET',
